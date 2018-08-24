@@ -63,11 +63,13 @@
                   <button @click="setInFav(catalogIndex)"
                           class="cart-actions__button cart-actions__button_fill_gray"
                           :class="{'cart-actions__button_fill_gray_active': catalogItem.inFav}">
+
                     <img src="../assets/img/shape.png"
                          srcset="../assets/img/shape@2x.png 2x,
              img/shape@3x.png 3x"
                          class="Shape"
-                         v-if="catalogItem.inFav">
+                         v-if="!catalogItem.inFav">
+
                     <img src="../assets/img/shapeactive.png"
                          srcset="../assets/img/shapeactive@2x.png 2x,
              img/shapeactive@3x.png 3x"
@@ -84,17 +86,16 @@
               </div>
             </div>
           </div>
-
-
-
         </div>
       </div>
       <div class="col-3">
         <div class="catalog-filter">
-          <button class="mb-10 button button_color_blue button_size_100 button_weight_300">
+          <button @click="setFilter('filter')"
+                  class="mb-10 button button_color_blue button_size_100 button_weight_300">
             Показать результат
           </button>
-          <button class="button button_color_gray-light button_size_100 button_weight_300 ">
+          <button  @click="setFilter('clear')"
+            class="button button_color_gray-light button_size_100 button_weight_300 ">
             Очистить фильтр
           </button>
           <div class="catalog-filter__filter-title">
@@ -103,10 +104,13 @@
 
           <div class="checkbox-options">
             <ul class="checkbox-options__list">
-              <li class="checkbox-options__option checkbox-options__option_active">
+              <li v-for="(filterItem, filterIndex) in filterListArr"
+                  :key = "filterIndex"
+                  :class = "{'checkbox-options__option_active': filterItem.value}"
+                  class="checkbox-options__option">
                 <label class="checkbox-container ">
-                  Canon
-                  <input type="checkbox">
+                  {{filterItem.key}}
+                  <input type="checkbox" v-model="filterItem.value">
                   <span class="checkbox-container__checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8">
                         <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-width="2" d="M1.936 3.932L4.44 6.524l3.748-5"/>
@@ -114,62 +118,7 @@
                   </span>
                 </label>
               </li>
-              <li class="checkbox-options__option checkbox-options__option_active">
-                <label class="checkbox-container ">
-                  Canon
-                  <input type="checkbox">
-                  <span class="checkbox-container__checkmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8">
-                        <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-width="2" d="M1.936 3.932L4.44 6.524l3.748-5"/>
-                    </svg>
-                  </span>
-                </label>
-              </li>
-              <li class="checkbox-options__option checkbox-options__option_active">
-                <label class="checkbox-container ">
-                  Canon
-                  <input type="checkbox">
-                  <span class="checkbox-container__checkmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8">
-                        <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-width="2" d="M1.936 3.932L4.44 6.524l3.748-5"/>
-                    </svg>
-                  </span>
-                </label>
-              </li>
-              <li class="checkbox-options__option checkbox-options__option_active">
-                <label class="checkbox-container ">
-                  Geleral
-                  Electrics
-                  <input type="checkbox">
-                  <span class="checkbox-container__checkmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8">
-                        <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-width="2" d="M1.936 3.932L4.44 6.524l3.748-5"/>
-                    </svg>
-                  </span>
-                </label>
-              </li>
-              <li class="checkbox-options__option checkbox-options__option_active">
-                <label class="checkbox-container ">
-                  Canon
-                  <input type="checkbox">
-                  <span class="checkbox-container__checkmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8">
-                        <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-width="2" d="M1.936 3.932L4.44 6.524l3.748-5"/>
-                    </svg>
-                  </span>
-                </label>
-              </li>
-              <li class="checkbox-options__option checkbox-options__option_active">
-                <label class="checkbox-container ">
-                  Canon
-                  <input type="checkbox">
-                  <span class="checkbox-container__checkmark">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="10" height="8" viewBox="0 0 10 8">
-                        <path fill="none" fill-rule="evenodd" stroke="#FFF" stroke-linecap="round" stroke-width="2" d="M1.936 3.932L4.44 6.524l3.748-5"/>
-                    </svg>
-                  </span>
-                </label>
-              </li>
+
             </ul>
           </div>
 
@@ -182,8 +131,11 @@
 </template>
 
 <script>
-
+  import 'core-js/fn/promise' //шёл 2018 год, IE всё ещё не подерживает промисы(
   import axios from 'axios'
+
+  // const API_URL = 'http://aero.mramid.ru';//для build
+  const API_URL = 'http://localhost:8080';//для dev
 
   export default {
     name: 'catalog',
@@ -211,7 +163,7 @@
                 value: '18-55 мм.'
               },
             ],//Опции
-            inFav: true,//в изранном
+            inFav: false,//в изранном
             inEq: false,// в сравнении
           },
           {
@@ -242,33 +194,125 @@
             inFav: false,//в изранном
             inEq: false,// в сравнении
           },
-
+        ],
+        filterListArr: [
+          {
+            key: 'Canon',
+            value: false
+          },
+          {
+            key: 'Olympus',
+            value: false
+          },
+          {
+            key: 'Fujifilm',
+            value: false
+          },
+          {
+            key: 'Pentax',
+            value: false
+          },
+          {
+            key: 'Nikon',
+            value: false
+          },
+          {
+            key: 'Sigma',
+            value: false
+          },
+          {
+            key: 'Panasonic',
+            value: false
+          },
+          {
+            key: 'Geleral Electrics',
+            value: false
+          },
+          {
+            key: 'Leica',
+            value: false
+          },
+          {
+            key: 'Zenit',
+            value: false
+          },
         ]
-
       }
     },
     computed: {
     },
     props: [],
     methods: {
-      setInFav(catalogIndex){ // запись/удаление из Избранного
+      // запись/удаление из Избранного
+      setInFav(catalogIndex){
         let payload = {
-              productID: this.catalogListArr[catalogIndex].productId,
+              productID: this.catalogListArr[catalogIndex].productId || '',
             };
+        axios.get( API_URL + '/inFav.json', {// делаем запрос на сервер, возвращает promise
+          params: {
+            ...payload
+          },
+        })
+        .then(resp => {
+          const error = JSON.parse(resp.data.error);
+          if(error){
+            console.error('Ошибка');
+          }else {
+            if ( +resp.data.result.status === 200){
+              console.log(`Статус: ${resp.data.result.message}`);
 
-
-        axios({url: 'https://jsonplaceholder.typicode.com/posts', data: payload, method: 'POST' }) // делаем запрос на сервер, возвращает promise
-          .then(resp => {
-            const error = resp.error;
-            if(error){
-              console.error('Ошибка');
-            }else {
-              console.log('всё ok');
+              this.catalogListArr[catalogIndex].inFav = JSON.parse(resp.data.result.inFav);
             }
-          })
-          .catch(err => {
-            console.error(`Ошибка ${err}`);
-          });
+          }
+        })
+        .catch(err => {
+          console.error(`Ошибка на сервере ${err}`);
+        });
+
+
+      },
+      // фильтрация
+      setFilter(filterStatus){
+        let filterObj = {};//параметры фильтрации, в виде объекта
+        this.filterListArr.forEach(function (filterItem) {
+          console.log('filterItem = ', filterItem);
+          filterObj[filterItem.key] = filterItem.value; // формируем параметры фильтрации
+        });
+
+        let payload = {
+          ...filterObj, // массив с фильтрами
+          setFilter: filterStatus // статус фильтра (filter,clear - фильтровать, очистить)
+        };
+
+        axios.get( API_URL + '/filter.json', {// делаем запрос на сервер, возвращает promise
+          params: {
+            ...payload
+          },
+        })
+        .then(resp => {
+          const error = JSON.parse(resp.data.error);
+          if(error){
+            console.error('Ошибка');
+          }else {
+            if ( +resp.data.result.status === 200){
+              console.log(`Статус: ${resp.data.result.message}`);
+
+              if (resp.data.result.setFilter === 'clear' || filterStatus === 'clear'){
+                this.filterListArr.forEach(function (filterItem, index) {
+                  filterItem.value = false; // формируем параметры фильтрации
+                });
+              }
+
+              this.$set(this, 'catalogListArr', resp.data.result.catalogListArr);
+
+
+            }
+          }
+        })
+        .catch(err => {
+          console.error(`Ошибка на сервере ${err}`);
+        });
+
 
 
       },
