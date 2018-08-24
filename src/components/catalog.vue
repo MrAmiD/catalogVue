@@ -5,84 +5,74 @@
     <div class="row">
       <div class="col-9">
         <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 mb-10">
+
+          <div class="col-12 col-md-6 col-lg-4 mb-10"
+               v-for="(catalogItem, catalogIndex) in catalogListArr"
+               :key="catalogIndex">
             <div class="catalog-product-card catalog-product-card__mb_gutter">
               <div class="catalog-product-card__header-cart">
-                <div class="catalog-product-card__article">
-                  Арт. 34534345
+                <div class="catalog-product-card__article" v-if="catalogItem.article">
+                  Арт. {{catalogItem.article}}
                 </div>
                 <div class="catalog-product-card__image">
-                  <a href="/">
-                    <img src="../assets/img/product.png" alt="Canon BLA bla">
+                  <a :href="catalogItem.link">
+                    <img v-if="catalogItem.image"
+                         :src="catalogItem.image"
+                         alt="Canon BLA bla">
+                    <img v-else
+                         src="../assets/img/photo.png"
+                         class="catalog-product-card__image-tmp" :alt="catalogItem.title">
                   </a>
                 </div>
-                <div class="catalog-product-card__owned">
+                <div class="catalog-product-card__owned" :class="{'catalog-product-card__owned_active': catalogItem.owned}">
                   <img src="../assets/img/path-1176.png"
                        srcset="../assets/img/path-1176@2x.png 2x,
-            img/path-1176@3x.png 3x" title="В наличии">
+            img/path-1176@3x.png 3x"
+                       title="В наличии">
                   В наличии
                 </div>
-                <a href="" class="catalog-product-card__title" title="Canon PowerShot SX400 IS с улучшенной матрицей и объективом">
-                  Canon PowerShot SX400 IS
-                  с улучшенной матрицей
-                  и объективом
+                <a :href="catalogItem.link"
+                   class="catalog-product-card__title"
+                   :title="catalogItem.title">
+                  {{catalogItem.title}}
                 </a>
                 <ul class="catalog-product-card__options">
-                  <li class="catalog-product-card__options-item">
+                  <li v-for="(optItem, optIndex) in catalogItem.options"
+                      :key="optIndex"
+                      class="catalog-product-card__options-item">
                     <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Физический размер &#8194;
+                      {{optItem.key}} &#8194;
                     </div>
                     <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      23.2 x 15.2 мм
-                    </div>
-
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Диафрагма &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      CMOS
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Формат записи &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      RAW, JPEG, MP4 и другие
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Фокусное расстояние &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      18-55 мм.
+                      {{optItem.value}}
                     </div>
                   </li>
                 </ul>
               </div>
               <div class="catalog-product-card__footer-cart">
-                <a href="" title="Купить" class="catalog-product-card__button  button button_color_blue button_size_m">
+                <a :href="catalogItem.link"
+                   :title="catalogItem.title"
+                   class="catalog-product-card__button button button_color_blue button_size_m">
                   <img src="../assets/img/cart.png"
                        srcset="../assets/img/cart@2x.png 2x,
              img/cart@3x.png 3x"
                        class="cart" alt="Купить">
                   Купить
                 </a>
-
                 <div class="cart-actions catalog-product-card__cart-actions">
-                  <button class="cart-actions__button cart-actions__button_fill_gray">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="17" viewBox="0 0 20 17">
-                      <defs>
-                        <path id="a" d="M243.052 551l-1.333-1.293c-4.95-4.25-8.188-7.115-8.188-10.625 0-2.865 2.285-5.082 5.237-5.082 1.619 0 3.237.74 4.284 1.94 1.048-1.2 2.666-1.94 4.285-1.94 2.951 0 5.236 2.217 5.236 5.082 0 3.51-3.237 6.375-8.188 10.625L243.052 551z"/>
-                        <mask id="b" width="19.042" height="17" x="0" y="0" fill="#fff">
-                          <use xlink:href="#a"/>
-                        </mask>
-                      </defs>
-                      <use fill="none" fill-rule="evenodd" stroke="#BFBFBF" stroke-width="4" mask="url(#b)" transform="translate(-233 -534)" xlink:href="#a"/>
-                    </svg>
+                  <button @click="setInFav(catalogIndex)"
+                          class="cart-actions__button cart-actions__button_fill_gray"
+                          :class="{'cart-actions__button_fill_gray_active': catalogItem.inFav}">
+                    <img src="../assets/img/shape.png"
+                         srcset="../assets/img/shape@2x.png 2x,
+             img/shape@3x.png 3x"
+                         class="Shape"
+                         v-if="catalogItem.inFav">
+                    <img src="../assets/img/shapeactive.png"
+                         srcset="../assets/img/shapeactive@2x.png 2x,
+             img/shapeactive@3x.png 3x"
+                         class="Shape"
+                         v-else>
                   </button>
                   <button class="cart-actions__button">
                     <img src="../assets/img/scales-26.jpg"
@@ -91,279 +81,12 @@
                          class="Scales-26">
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-10">
-            <div class="catalog-product-card catalog-product-card__mb_gutter">
-              <div class="catalog-product-card__header-cart">
-                <div class="catalog-product-card__article">
-                  Арт. 34534345
-                </div>
-                <div class="catalog-product-card__image">
-                  <a href="/">
-                    <img src="../assets/img/product.png" alt="Canon BLA bla">
-                  </a>
-                </div>
-                <div class="catalog-product-card__owned">
-                  <img src="../assets/img/path-1176.png"
-                       srcset="../assets/img/path-1176@2x.png 2x,
-            img/path-1176@3x.png 3x" title="В наличии">
-                  В наличии
-                </div>
-                <a href="" class="catalog-product-card__title" title="Canon PowerShot SX400 IS с улучшенной матрицей и объективом">
-                  Canon PowerShot SX400 IS
-                  с улучшенной матрицей
-                  и объективом
-                </a>
-                <ul class="catalog-product-card__options">
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Физический размер &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      23.2 x 15.2 мм
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Диафрагма &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      CMOS
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Формат записи &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      RAW, JPEG, MP4 и другие
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Фокусное расстояние &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      18-55 мм.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="catalog-product-card__footer-cart">
-                <a href="" title="Купить" class="catalog-product-card__button  button button_color_blue button_size_m">
-                  <img src="../assets/img/cart.png"
-                       srcset="../assets/img/cart@2x.png 2x,
-             img/cart@3x.png 3x"
-                       class="cart" alt="Купить">
-                  Купить
-                </a>
 
-                <div class="cart-actions catalog-product-card__cart-actions">
-                  <button class="cart-actions__button cart-actions__button_fill_gray">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="17" viewBox="0 0 20 17">
-                      <defs>
-                        <path id="a" d="M243.052 551l-1.333-1.293c-4.95-4.25-8.188-7.115-8.188-10.625 0-2.865 2.285-5.082 5.237-5.082 1.619 0 3.237.74 4.284 1.94 1.048-1.2 2.666-1.94 4.285-1.94 2.951 0 5.236 2.217 5.236 5.082 0 3.51-3.237 6.375-8.188 10.625L243.052 551z"/>
-                        <mask id="b" width="19.042" height="17" x="0" y="0" fill="#fff">
-                          <use xlink:href="#a"/>
-                        </mask>
-                      </defs>
-                      <use fill="none" fill-rule="evenodd" stroke="#BFBFBF" stroke-width="4" mask="url(#b)" transform="translate(-233 -534)" xlink:href="#a"/>
-                    </svg>
-                  </button>
-                  <button class="cart-actions__button">
-                    <img src="../assets/img/scales-26.jpg"
-                         srcset="../assets/img/scales-26@2x.jpg 2x,
-             img/scales-26@3x.jpg 3x"
-                         class="Scales-26">
-                  </button>
-                </div>
 
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-10">
-            <div class="catalog-product-card catalog-product-card__mb_gutter">
-              <div class="catalog-product-card__header-cart">
-                <div class="catalog-product-card__article">
-                  Арт. 34534345
-                </div>
-                <div class="catalog-product-card__image">
-                  <a href="/">
-                    <img src="../assets/img/product.png" alt="Canon BLA bla">
-                  </a>
-                </div>
-                <div class="catalog-product-card__owned">
-                  <img src="../assets/img/path-1176.png"
-                       srcset="../assets/img/path-1176@2x.png 2x,
-            img/path-1176@3x.png 3x" title="В наличии">
-                  В наличии
-                </div>
-                <a href="" class="catalog-product-card__title" title="Canon PowerShot SX400 IS с улучшенной матрицей и объективом">
-                  Canon PowerShot SX400 IS
-                  с улучшенной матрицей
-                  и объективом
-                </a>
-                <ul class="catalog-product-card__options">
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Физический размер &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      23.2 x 15.2 мм
-                    </div>
 
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Диафрагма &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      CMOS
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Формат записи &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      RAW, JPEG, MP4 и другие
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Фокусное расстояние &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      18-55 мм.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="catalog-product-card__footer-cart">
-                <a href="" title="Купить" class="catalog-product-card__button  button button_color_blue button_size_m">
-                  <img src="../assets/img/cart.png"
-                       srcset="../assets/img/cart@2x.png 2x,
-             img/cart@3x.png 3x"
-                       class="cart" alt="Купить">
-                  Купить
-                </a>
-
-                <div class="cart-actions catalog-product-card__cart-actions">
-                  <button class="cart-actions__button cart-actions__button_fill_gray">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="17" viewBox="0 0 20 17">
-                      <defs>
-                        <path id="a" d="M243.052 551l-1.333-1.293c-4.95-4.25-8.188-7.115-8.188-10.625 0-2.865 2.285-5.082 5.237-5.082 1.619 0 3.237.74 4.284 1.94 1.048-1.2 2.666-1.94 4.285-1.94 2.951 0 5.236 2.217 5.236 5.082 0 3.51-3.237 6.375-8.188 10.625L243.052 551z"/>
-                        <mask id="b" width="19.042" height="17" x="0" y="0" fill="#fff">
-                          <use xlink:href="#a"/>
-                        </mask>
-                      </defs>
-                      <use fill="none" fill-rule="evenodd" stroke="#BFBFBF" stroke-width="4" mask="url(#b)" transform="translate(-233 -534)" xlink:href="#a"/>
-                    </svg>
-                  </button>
-                  <button class="cart-actions__button">
-                    <img src="../assets/img/scales-26.jpg"
-                         srcset="../assets/img/scales-26@2x.jpg 2x,
-             img/scales-26@3x.jpg 3x"
-                         class="Scales-26">
-                  </button>
-                </div>
-
-              </div>
-            </div>
-          </div>
-          <div class="col-12 col-md-6 col-lg-4 mb-10">
-            <div class="catalog-product-card catalog-product-card__mb_gutter">
-              <div class="catalog-product-card__header-cart">
-                <div class="catalog-product-card__article">
-                  Арт. 34534345
-                </div>
-                <div class="catalog-product-card__image">
-                  <a href="/">
-                    <img src="../assets/img/product.png" alt="Canon BLA bla">
-                  </a>
-                </div>
-                <div class="catalog-product-card__owned">
-                  <img src="../assets/img/path-1176.png"
-                       srcset="../assets/img/path-1176@2x.png 2x,
-            img/path-1176@3x.png 3x" title="В наличии">
-                  В наличии
-                </div>
-                <a href="" class="catalog-product-card__title" title="Canon PowerShot SX400 IS с улучшенной матрицей и объективом">
-                  Canon PowerShot SX400 IS
-                  с улучшенной матрицей
-                  и объективом
-                </a>
-                <ul class="catalog-product-card__options">
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Физический размер &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      23.2 x 15.2 мм
-                    </div>
-
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Диафрагма &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      CMOS
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Формат записи &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      RAW, JPEG, MP4 и другие
-                    </div>
-                  </li>
-                  <li class="catalog-product-card__options-item">
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_gray">
-                      Фокусное расстояние &#8194;
-                    </div>
-                    <div class="catalog-product-card__options-text catalog-product-card__options-text_color_dark">
-                      18-55 мм.
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="catalog-product-card__footer-cart">
-                <a href="" title="Купить" class="catalog-product-card__button  button button_color_blue button_size_m">
-                  <img src="../assets/img/cart.png"
-                       srcset="../assets/img/cart@2x.png 2x,
-             img/cart@3x.png 3x"
-                       class="cart" alt="Купить">
-                  Купить
-                </a>
-
-                <div class="cart-actions catalog-product-card__cart-actions">
-                  <button class="cart-actions__button cart-actions__button_fill_gray">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="17" viewBox="0 0 20 17">
-                      <defs>
-                        <path id="a" d="M243.052 551l-1.333-1.293c-4.95-4.25-8.188-7.115-8.188-10.625 0-2.865 2.285-5.082 5.237-5.082 1.619 0 3.237.74 4.284 1.94 1.048-1.2 2.666-1.94 4.285-1.94 2.951 0 5.236 2.217 5.236 5.082 0 3.51-3.237 6.375-8.188 10.625L243.052 551z"/>
-                        <mask id="b" width="19.042" height="17" x="0" y="0" fill="#fff">
-                          <use xlink:href="#a"/>
-                        </mask>
-                      </defs>
-                      <use fill="none" fill-rule="evenodd" stroke="#BFBFBF" stroke-width="4" mask="url(#b)" transform="translate(-233 -534)" xlink:href="#a"/>
-                    </svg>
-                  </button>
-                  <button class="cart-actions__button">
-                    <img src="../assets/img/scales-26.jpg"
-                         srcset="../assets/img/scales-26@2x.jpg 2x,
-             img/scales-26@3x.jpg 3x"
-                         class="Scales-26">
-                  </button>
-                </div>
-
-              </div>
-            </div>
-          </div>
         </div>
       </div>
       <div class="col-3">
@@ -459,17 +182,96 @@
 </template>
 
 <script>
+
+  import axios from 'axios'
+
   export default {
     name: 'catalog',
     data () {
       return {
-        msg: 'template'
+        catalogListArr: [
+          {
+            productId: 213123,
+            article: 345656,//Артикул
+            owned: true,// В наличии
+            image: 'src/assets/img/product.png',// фото
+            title: 'Canon PowerShot SX400 IS с улучшенной матрицей и объективом',// наименование товара
+            link: '/',//ссылка на страницу товара
+            options: [
+              {
+                key: 'Физический размер',
+                value: '23.2 x 15.2 мм'
+              },
+              {
+                key: 'Формат записи',
+                value: 'RAW, JPEG, MP4 и другие'
+              },
+              {
+                key: 'Фокусное расстояние',
+                value: '18-55 мм.'
+              },
+            ],//Опции
+            inFav: true,//в изранном
+            inEq: false,// в сравнении
+          },
+          {
+            productId: 909877,
+            article: 909090,//Артикул
+            owned: false,// В наличии
+            image: '',// фото
+            title: 'Canon 2 PowerShot SX600 IS с улучшенной матрицей и объективом',// наименование товара
+            link: '/',//ссылка на страницу товара
+            options: [
+              {
+                key: 'Физический размер',
+                value: '23.2 x 15.2 мм'
+              },
+              {
+                key: 'Формат записи',
+                value: 'RAW, JPEG, MP4 и другие'
+              },
+              {
+                key: 'Фокусное расстояние',
+                value: '18-55 мм.'
+              },
+              {
+                key: 'Автофокус',
+                value: 'Есть'
+              },
+            ],//Опции
+            inFav: false,//в изранном
+            inEq: false,// в сравнении
+          },
+
+        ]
+
       }
     },
     computed: {
     },
     props: [],
     methods: {
+      setInFav(catalogIndex){ // запись/удаление из Избранного
+        let payload = {
+              productID: this.catalogListArr[catalogIndex].productId,
+            };
+
+
+        axios({url: 'https://jsonplaceholder.typicode.com/posts', data: payload, method: 'POST' }) // делаем запрос на сервер, возвращает promise
+          .then(resp => {
+            const error = resp.error;
+            if(error){
+              console.error('Ошибка');
+            }else {
+              console.log('всё ok');
+            }
+          })
+          .catch(err => {
+            console.error(`Ошибка ${err}`);
+          });
+
+
+      },
     },
   }
 </script>
@@ -505,11 +307,13 @@
     align-items: center
     justify-content: center
     margin-top: 15px
-    padding-left: 23.9px
-    padding-right: 5.8px
+    padding: 0 15px
+    min-height: 200px
     img
       max-width: 100%
       height: auto
+  &__image-tmp
+    max-width: 100px!important
   &__owned
     color: $green
     display: flex
@@ -519,8 +323,11 @@
     font-size: 12.8px
     font-weight: 300
     line-height: 16px
+    opacity: 0
     img
       margin-right: 7.9px
+    &_active
+      opacity: 1
   &__title
     margin-top: 5px
     font-weight: 500
@@ -529,6 +336,8 @@
     display: inline-block
     padding: 0 54px 0 31.8px
     transition: all .3s ease
+    height: 66px
+    overflow: hidden
     &:hover
       color: $blue
       text-decoration: none
@@ -605,10 +414,11 @@
     justify-content: center
     align-items: center
     cursor: pointer
+    height: 24px
     &_fill
       &_gray
-        &:hover
-          svg path
+        &_active
+          &>svg path
             fill: $gray
 
 .catalog-filter

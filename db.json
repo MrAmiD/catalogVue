@@ -1,0 +1,8 @@
+{
+  "error": "false",
+  "result": {
+    "inFav": "true",
+    "status": "200",
+    "message": "Товар добавлен в избранное"
+  }
+}
