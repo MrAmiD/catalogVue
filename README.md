@@ -1,6 +1,6 @@
-# webpack-simple-bootstrap
+# catalog-vue
 
-> webpack-simple width bootstrap
+> catalog-vue
 
 ## Build Setup
 

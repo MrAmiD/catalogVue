@@ -26,15 +26,14 @@
 
 <style lang="sass">
 /*bootstrap styles*/
-@import '../node_modules/bootstrap/scss/bootstrap'
-
-
 @import "assets/sass/vars"
+@import '../node_modules/bootstrap/scss/bootstrap'
 @import "assets/sass/fonts"
 
 *
+  font-family: $default-font
   outline: none!important
-  font-weight: 500
+
 html, body
   height: auto
 body
@@ -45,11 +44,7 @@ body
   font-family: $default-font
   opacity: 1
   margin: 0px
-*
-  font-family: $default-font
-  outline: none!important
-h1
-  display: flex
-  align-items: center
-  font-family: 'ProximaNova', sans-serif
+  background: $white
+
+
 </style>
